@@ -334,6 +334,8 @@ local function buildTable(index, origin)
 		busy = false,
 		origin = origin,
 		assigned = {},
+		rigs = {},
+		seatTokens = { 0, 0 },
 		deadline = nil,
 		rackCenter = CFrame.new(origin + Vector3.new(0, TABLE_TOP + 0.95, 0)),
 		shownLen = 0,
@@ -348,7 +350,12 @@ local function buildTable(index, origin)
 			local who = Players:GetPlayerFromCharacter(hum.Parent) or hum.Parent
 			if who ~= t.assigned[side] then
 				task.defer(function()
-					hum.Sit = false
+					if seat.Occupant == hum then
+						local curWho = Players:GetPlayerFromCharacter(hum.Parent) or hum.Parent
+						if curWho ~= t.assigned[side] then
+							hum.Sit = false
+						end
+					end
 				end)
 			end
 		end)
@@ -449,22 +456,72 @@ local function humanoidOf(player)
 	return char and char:FindFirstChildOfClass("Humanoid")
 end
 
+local function resetSeat(t, side, seat)
+	local sign = (side == 1) and -1 or 1
+	seat.Anchored = true
+	seat.CFrame = CFrame.lookAt(t.origin + Vector3.new(0, 1.8, sign * 5), t.origin + Vector3.new(0, 1.8, 0))
+end
+
+local function clearSeatOccupant(t, side, seat, keepHum)
+	if t.rigs[side] then
+		if t.rigs[side].Parent then
+			t.rigs[side]:Destroy()
+		end
+		t.rigs[side] = nil
+	end
+	local occ = seat.Occupant
+	if occ and occ ~= keepHum then
+		if not Players:GetPlayerFromCharacter(occ.Parent) then
+			if occ.Parent then
+				occ.Parent:Destroy()
+			end
+		else
+			occ.Sit = false
+		end
+	end
+	local weld = seat:FindFirstChild("SeatWeld")
+	if weld and (not keepHum or seat.Occupant ~= keepHum) then
+		weld:Destroy()
+	end
+end
+
 function Arena.Seat(t, side, player)
 	local hum = humanoidOf(player)
 	if not hum then
 		return
 	end
+	t.seatTokens[side] = (t.seatTokens[side] or 0) + 1
+	local token = t.seatTokens[side]
 	local seat = t.seats[side]
-	if seat.Occupant and seat.Occupant ~= hum then
-		seat.Occupant.Sit = false
-	end
-	local oldWeld = seat:FindFirstChild("SeatWeld")
-	if oldWeld then oldWeld:Destroy() end
-	local sign = (side == 1) and -1 or 1
-	seat.Anchored = true
-	seat.CFrame = CFrame.lookAt(t.origin + Vector3.new(0, 1.8, sign * 5), t.origin + Vector3.new(0, 1.8, 0))
+	t.assigned[side] = player
 	hum.UseJumpPower = true
 	hum.JumpPower = 0
+	if player.Character then
+		player.Character.Archivable = true -- lets the opponent's HUD render this avatar
+	end
+
+	-- Fast path: player is already cleanly seated in their assigned chair
+	if seat.Occupant == hum and hum.SeatPart == seat and seat:FindFirstChild("SeatWeld") then
+		if t.rigs[side] then
+			if t.rigs[side].Parent then
+				t.rigs[side]:Destroy()
+			end
+			t.rigs[side] = nil
+		end
+		seat.Anchored = true
+		return
+	end
+
+	clearSeatOccupant(t, side, seat, hum)
+	resetSeat(t, side, seat)
+
+	if hum.SeatPart and hum.SeatPart ~= seat then
+		local oldWeld = hum.SeatPart:FindFirstChild("SeatWeld")
+		if oldWeld then
+			oldWeld:Destroy()
+		end
+		hum.Sit = false
+	end
 	local root = hum.RootPart
 	if root then
 		for _, w in ipairs(root:GetChildren()) do
@@ -472,49 +529,110 @@ function Arena.Seat(t, side, player)
 				w:Destroy()
 			end
 		end
-		root.CFrame = seat.CFrame + Vector3.new(0, 2, 0)
 	end
-	t.assigned[side] = player
-	player.Character.Archivable = true -- lets the opponent's HUD render this avatar
-	seat:Sit(hum)
+
+	local function trySit(curHum)
+		local char = player.Character
+		local r = curHum.RootPart
+		if char then
+			if r then
+				r.AssemblyLinearVelocity = Vector3.zero
+				r.AssemblyAngularVelocity = Vector3.zero
+			end
+			char:PivotTo(seat.CFrame + Vector3.new(0, 2, 0))
+		end
+		seat:Sit(curHum)
+	end
+
+	if not hum.Sit and not seat.Occupant then
+		trySit(hum)
+	end
+
+	task.spawn(function()
+		for _ = 1, 25 do
+			task.wait(0.08)
+			if t.seatTokens[side] ~= token or t.assigned[side] ~= player or not player.Parent then
+				return
+			end
+			local curHum = humanoidOf(player)
+			if not curHum or curHum.Health <= 0 then
+				return
+			end
+			if seat.Occupant == curHum and curHum.SeatPart == seat then
+				return
+			end
+			if curHum.Sit and curHum.SeatPart ~= seat then
+				local oldWeld = curHum.SeatPart and curHum.SeatPart:FindFirstChild("SeatWeld")
+				if oldWeld then
+					oldWeld:Destroy()
+				end
+				curHum.Sit = false
+			else
+				clearSeatOccupant(t, side, seat, curHum)
+				resetSeat(t, side, seat)
+				trySit(curHum)
+			end
+		end
+	end)
 end
 
 -- seat an NPC rig (bot opponent or ambient duelist)
 function Arena.SeatRig(t, side, rig)
 	local seat = t.seats[side]
 	local hum = rig:FindFirstChildOfClass("Humanoid")
-	if seat.Occupant and seat.Occupant ~= hum then
-		seat.Occupant.Sit = false
+	t.seatTokens[side] = (t.seatTokens[side] or 0) + 1
+	local token = t.seatTokens[side]
+	if t.rigs[side] and t.rigs[side] ~= rig then
+		if t.rigs[side].Parent then
+			t.rigs[side]:Destroy()
+		end
+		t.rigs[side] = nil
 	end
+	clearSeatOccupant(t, side, seat, hum)
+	resetSeat(t, side, seat)
 	t.assigned[side] = rig
+	t.rigs[side] = rig
 	rig:PivotTo(seat.CFrame + Vector3.new(0, 2, 0))
 	rig.Parent = folder
 	if hum then
 		task.spawn(function()
-			-- wait for the previous occupant to actually stand up
 			for _ = 1, 30 do
-				if not seat.Occupant or seat.Occupant == hum then
-					break
+				if t.seatTokens[side] ~= token or t.assigned[side] ~= rig or not rig.Parent then
+					return
+				end
+				if seat.Occupant == hum then
+					return
+				end
+				if not seat.Occupant then
+					resetSeat(t, side, seat)
+					rig:PivotTo(seat.CFrame + Vector3.new(0, 2, 0))
+					seat:Sit(hum)
 				end
 				task.wait(0.05)
-			end
-			if rig.Parent and not seat.Occupant then
-				seat:Sit(hum)
 			end
 		end)
 	end
 end
 
-function Arena.ClearSeats(t)
-	t.assigned = {}
+function Arena.ClearSeats(t, keep)
 	for side, seat in ipairs(t.seats) do
-		local weld = seat:FindFirstChild("SeatWeld")
-		if weld then
-			weld:Destroy()
+		t.seatTokens[side] = (t.seatTokens[side] or 0) + 1
+		local keepPlayer = keep and keep[side]
+		local keepHum = keepPlayer and humanoidOf(keepPlayer)
+		if keepPlayer and keepHum and seat.Occupant == keepHum and keepHum.SeatPart == seat and seat:FindFirstChild("SeatWeld") then
+			if t.rigs[side] then
+				if t.rigs[side].Parent then
+					t.rigs[side]:Destroy()
+				end
+				t.rigs[side] = nil
+			end
+			t.assigned[side] = keepPlayer
+			seat.Anchored = true
+		else
+			t.assigned[side] = nil
+			clearSeatOccupant(t, side, seat)
+			resetSeat(t, side, seat)
 		end
-		local sign = (side == 1) and -1 or 1
-		seat.Anchored = true
-		seat.CFrame = CFrame.lookAt(t.origin + Vector3.new(0, 1.8, sign * 5), t.origin + Vector3.new(0, 1.8, 0))
 	end
 end
 
@@ -540,12 +658,11 @@ function Arena.Unseat(player)
 				weld:Destroy()
 			end
 			if t.assigned[side] == player then
+				t.seatTokens[side] = (t.seatTokens[side] or 0) + 1
 				t.assigned[side] = nil
 			end
 			-- Always ensure seat is anchored and at its correct table position
-			local sign = (side == 1) and -1 or 1
-			seat.Anchored = true
-			seat.CFrame = CFrame.lookAt(t.origin + Vector3.new(0, 1.8, sign * 5), t.origin + Vector3.new(0, 1.8, 0))
+			resetSeat(t, side, seat)
 		end
 	end
 	if root then

@@ -257,7 +257,7 @@ onEnd = function(match, winner, loser, reason)
 
 	-- winner chooses: Cash Out or King of the Table
 	local token = {}
-	pendingChoice[winner.player] = { table = tbl, word = match.word, token = token, finalClock = match.turnTime }
+	pendingChoice[winner.player] = { table = tbl, word = match.word, token = token, finalClock = match.turnTime, side = winner.side or 1 }
 	-- staying on as King is the default; the winner only acts to Cash Out
 	task.delay(Config.ContinueChoiceSeconds, function()
 		local pc = pendingChoice[winner.player]
@@ -358,7 +358,7 @@ function Lobby.Choice(player, choice)
 	pendingChoice[player] = nil
 	if choice == "king" and player.Parent then
 		-- a challenger sits down right away: a waiting human in range first, otherwise a bot
-		table.insert(kings, { player = player, table = pc.table, word = pc.word, since = os.clock(), fillAt = os.clock(), finalClock = pc.finalClock })
+		table.insert(kings, { player = player, table = pc.table, word = pc.word, since = os.clock(), fillAt = os.clock(), finalClock = pc.finalClock, side = pc.side or 1 })
 		Arena.SetDisplay(pc.table, pc.word, player.DisplayName .. " is King of the Table")
 		if Lobby._tick then
 			task.spawn(Lobby._tick)
@@ -412,14 +412,22 @@ function Lobby.LeaveTable(player)
 	toLobby(player)
 end
 
+local function orderKingSides(kingSide, kingEnt, challengerEnt)
+	if kingSide == 2 then
+		return challengerEnt, kingEnt
+	end
+	return kingEnt, challengerEnt
+end
+
 function Lobby.KingBot(player)
 	for i, k in ipairs(kings) do
 		if k.player == player then
 			table.remove(kings, i)
-			startMatch(k.table, Match.BotEntity(levelOf(player)), Match.PlayerEntity(player), {
+			local a, b = orderKingSides(k.side, Match.PlayerEntity(player), Match.BotEntity(levelOf(player)))
+			startMatch(k.table, a, b, {
 				word = k.word,
 				startClock = Config.KingStartClock(k.finalClock, levelOf(player)),
-				firstTurn = 1,
+				firstTurn = (k.side == 2) and 1 or 2,
 				ranked = false,
 			})
 			return
@@ -554,7 +562,8 @@ local function tick()
 				table.remove(kings, ki)
 				table.remove(queue, qi)
 				send(q.player, "QueueState", { searching = false })
-				startMatch(k.table, Match.PlayerEntity(q.player), Match.PlayerEntity(k.player), {
+				local a, b = orderKingSides(k.side, Match.PlayerEntity(k.player), Match.PlayerEntity(q.player))
+				startMatch(k.table, a, b, {
 					word = k.word,
 					startClock = Config.KingStartClock(k.finalClock, levelOf(k.player)),
 					ranked = true,
@@ -617,7 +626,8 @@ local function tick()
 		local k = kings[ki]
 		if t >= k.fillAt and k.player.Parent then
 			table.remove(kings, ki)
-			startMatch(k.table, disguisedFor(k.player, k.finalClock), Match.PlayerEntity(k.player), {
+			local a, b = orderKingSides(k.side, Match.PlayerEntity(k.player), disguisedFor(k.player, k.finalClock))
+			startMatch(k.table, a, b, {
 				word = k.word,
 				startClock = Config.KingStartClock(k.finalClock, levelOf(k.player)),
 				ranked = true,

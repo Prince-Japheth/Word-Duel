@@ -339,7 +339,7 @@ function Match.new(tbl, a, b, opts)
 		end
 	end
 
-	Arena.ClearSeats(tbl)
+	Arena.ClearSeats(tbl, { [1] = a.player, [2] = b.player })
 	for i, e in ipairs(self.ents) do
 		resetEntity(e, i)
 		if e.player then
@@ -860,7 +860,9 @@ function Match:finish(winnerSide, reason)
 		if e.kind == "bot" and e.rig then
 			local rig = e.rig
 			task.delay(2.6, function()
-				rig:Destroy()
+				if rig.Parent then
+					rig:Destroy()
+				end
 			end)
 		end
 	end
