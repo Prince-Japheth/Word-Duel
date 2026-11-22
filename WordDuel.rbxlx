@@ -7829,14 +7829,17 @@ renderItems = function(state)
 				k.sub.TextColor3 = C.amber
 				k.sub.TextTransparency = 0.35
 			end
-			if isPrimary then
-				stroke(C.white, 0.45, 1.5).Parent = k.face
-			elseif isSelected then
-				stroke(C.amber, 0.25, 2).Parent = k.face
-			elseif sl.fastAt and usable then
-				stroke(C.amber, 0.35, 1.5).Parent = k.face
-			elseif usable then
-				stroke(C.white, 0.88, 1).Parent = k.face
+			if isPrimary or isSelected or usable then
+				corner(14).Parent = k.holder
+				if isPrimary then
+					stroke(C.white, 0.45, 1.5).Parent = k.holder
+				elseif isSelected then
+					stroke(C.amber, 0.25, 2).Parent = k.holder
+				elseif sl.fastAt and usable then
+					stroke(C.amber, 0.35, 1.5).Parent = k.holder
+				elseif usable then
+					stroke(C.white, 0.88, 1).Parent = k.holder
+				end
 			end
 			local badgeBg, badgeBgTrans, badgeTxt, badgeStrokeCol, badgeStrokeTrans
 			if isPrimary then
