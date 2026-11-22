@@ -211,15 +211,17 @@ onEnd = function(match, winner, loser, reason)
 			PlayerData.CheckScoreRecord(winner.player, winner.score)
 			Leaderboards.Submit(winner.player, p)
 
-			-- Subway Surfers-style rare item drop on victory!
-			local dropRoll = math.random()
-			local dropChance = (winner.score and winner.score >= 25) and 0.35 or 0.20
-			if dropRoll < dropChance then
-				local dropPool = { "Help", "Time", "Help", "Time", "Skip", "DoubleShift" }
-				local droppedItem = dropPool[math.random(#dropPool)]
-				local itemName = Config.Items[droppedItem].name
-				res.luckyDrop = { item = droppedItem, name = itemName }
-				PlayerData.Reward(winner.player, "bonus", "LUCKY DROP!", "+1 " .. itemName .. " found after the match!", { [droppedItem] = 1 })
+			-- Subway Surfers-style rare item drop on ranked victory!
+			if ranked then
+				local dropRoll = math.random()
+				local dropChance = (winner.score and winner.score >= 30) and 0.07 or 0.04
+				if dropRoll < dropChance then
+					local dropPool = { "Time", "Time", "Time", "Time", "Help", "Help", "Help", "Skip", "Skip", "DoubleShift" }
+					local droppedItem = dropPool[math.random(#dropPool)]
+					local itemName = Config.Items[droppedItem].name
+					res.luckyDrop = { item = droppedItem, name = itemName }
+					PlayerData.Reward(winner.player, "bonus", "LUCKY DROP!", "+1 " .. itemName .. " found after the match!", { [droppedItem] = 1 })
+				end
 			end
 		end
 		res.canKing = ranked and not match.private and reason ~= "left_server"
@@ -228,7 +230,7 @@ onEnd = function(match, winner, loser, reason)
 
 	-- Award for biggest word in that entire match
 	if match.biggestWord and match.biggestWordLen >= 6 and match.biggestWordPlayer then
-		PlayerData.Reward(match.biggestWordPlayer, "award", "BIGGEST WORD", string.upper(match.biggestWord) .. " (" .. match.biggestWordLen .. " letters • Match Best)", { coins = 150 })
+		PlayerData.Reward(match.biggestWordPlayer, "award", "BIGGEST WORD", string.upper(match.biggestWord) .. " (" .. match.biggestWordLen .. " letters • Match Best)", { coins = 40 })
 	end
 
 	for plr, res in pairs(results) do

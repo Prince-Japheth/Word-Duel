@@ -65,7 +65,7 @@ function Shop.BuyWithCoins(player, kind)
 		return
 	end
 	if p.coins < price then
-		return PlayerData.Toast(player, "Not enough coins! You have " .. p.coins .. " / " .. price .. " needed. Play duels or top up!")
+		return PlayerData.Toast(player, "Not enough coins! You have " .. Config.FormatNumber(p.coins) .. " / " .. Config.FormatNumber(price) .. " needed. Play duels or top up!")
 	end
 	p.coins -= price
 	PlayerData.Grant(player, { [kind] = 1 })
@@ -91,7 +91,7 @@ function Shop.BuySlotWithCoins(player, slot)
 		return PlayerData.Toast(player, "Unlock Slot " .. (slot - 1) .. " first.")
 	end
 	if p.coins < price then
-		return PlayerData.Toast(player, "Need " .. price .. " coins (you have " .. p.coins .. "). Play duels or top up!")
+		return PlayerData.Toast(player, "Need " .. Config.FormatNumber(price) .. " coins (you have " .. Config.FormatNumber(p.coins) .. "). Play duels or top up!")
 	end
 	p.coins -= price
 	p.slotsBought = math.max(p.slotsBought, slot - 1)

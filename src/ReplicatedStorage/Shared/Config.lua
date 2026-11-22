@@ -17,7 +17,7 @@ Config.ContinueChoiceSeconds = 5 -- after a ranked win: seconds to Leave Table b
 ---------------------------------------------------------------- helps
 Config.HelpMaxPerMatch = 2
 Config.HelpCooldownTurns = 2   -- Help cannot be used on two of your own turns in a row
-Config.ShardsPerHelp = 5       -- Brilliant Move shards that convert into 1 Help
+Config.ShardsPerHelp = 20      -- Brilliant Move shards that convert into 1 Help
 
 ---------------------------------------------------------------- matchmaking
 Config.BaseBracket = 5         -- +/- levels
@@ -63,11 +63,11 @@ Config.LongWordLength = 7
 Config.EloK = 32
 Config.StartElo = 1000
 
--- King-of-the-Table win streak milestones (free lifelines for free players)
+-- King-of-the-Table win streak milestones (rare lifelines for free players)
 Config.StreakMilestones = {
-	[5] = { Help = 1 },
-	[10] = { Help = 1, Time = 1 },
-	[25] = { Help = 2, DoubleShift = 1 },
+	[10] = { Help = 1 },
+	[20] = { Time = 1, Skip = 1 },
+	[35] = { Help = 1, DoubleShift = 1 },
 }
 
 -- Daily Ladder: one shared solo puzzle a day (4-letter start -> target)
@@ -78,10 +78,10 @@ Config.LadderReward = { coins = 40, parBonus = 40, perStreak = 5, xp = 20 } -- f
 -- first-time tutorial: a relaxed match against a coach
 Config.TutorialTurnTime = 45
 Config.TutorialMoves = 4
-Config.TutorialReward = { coins = 100, Help = 1 }
+Config.TutorialReward = { coins = 150, Help = 1 }
 
 Config.ReferralLevel = 3
-Config.ReferralBundle = { Help = 3, Time = 3 }
+Config.ReferralBundle = { Help = 1, Time = 1 }
 
 ---------------------------------------------------------------- items
 Config.ItemOrder = { "Help", "Skip", "Time", "DoubleShift" }
@@ -92,10 +92,10 @@ Config.Items = {
 	Time = { name = "Time Boost", desc = "+5 seconds on your clock." },
 	DoubleShift = { name = "Double Points", desc = "Your next word scores double." },
 }
--- Natural (non-Robux) way to get items: coins earned from playing.
-Config.CoinPrices = { Help = 250, Skip = 350, Time = 200, DoubleShift = 600 }
-Config.SlotCoinPrices = { [2] = 1500, [3] = 5000, [4] = 15000 }
-Config.StartingInventory = { Help = 3, Skip = 1, Time = 2, DoubleShift = 0 }
+-- Natural (non-Robux) way to get items: coins earned from playing a lot.
+Config.CoinPrices = { Help = 3000, Skip = 4000, Time = 2500, DoubleShift = 6000 }
+Config.SlotCoinPrices = { [2] = 15000, [3] = 45000, [4] = 120000 }
+Config.StartingInventory = { Help = 1, Skip = 1, Time = 1, DoubleShift = 0 }
 
 -- Loadout belt: how many boost uses you can bring into ONE match.
 Config.MaxSlots = 4
@@ -112,15 +112,15 @@ Config.SlotLevels = { [2] = 20, [3] = 50, [4] = 100 } -- free unlock by level
 -- id = 0 means "not created yet". In Studio, id 0 grants for free so you can test.
 Config.Products = {
 	-- Coin packs (top up currency)
-	{ key = "Coins1000", id = 0, robux = 49, label = "1,000 Coins", grant = { coins = 1000 }, isCoins = true },
-	{ key = "Coins5000", id = 0, robux = 199, label = "5,000 Coins", grant = { coins = 5000 }, isCoins = true },
-	{ key = "Coins15000", id = 0, robux = 499, label = "15,000 Coins", grant = { coins = 15000 }, isCoins = true },
-	{ key = "Coins50000", id = 0, robux = 1299, label = "50,000 Coins", grant = { coins = 50000 }, isCoins = true },
+	{ key = "Coins2500", id = 0, robux = 49, label = "2,500 Coins", grant = { coins = 2500 }, isCoins = true },
+	{ key = "Coins10000", id = 0, robux = 179, label = "10,000 Coins", grant = { coins = 10000 }, isCoins = true },
+	{ key = "Coins30000", id = 0, robux = 449, label = "30,000 Coins", grant = { coins = 30000 }, isCoins = true },
+	{ key = "Coins100000", id = 0, robux = 1199, label = "100,000 Coins", grant = { coins = 100000 }, isCoins = true },
 
 	-- Boost packs
 	{ key = "Help3", id = 0, robux = 49, label = "3 Hints", grant = { Help = 3 } },
 	{ key = "Help10", id = 0, robux = 129, label = "10 Hints", grant = { Help = 10 } },
-	{ key = "Skip3", id = 0, robux = 49, label = "3 Passes", grant = { Skip = 3 } },
+	{ key = "Skip3", id = 0, robux = 59, label = "3 Passes", grant = { Skip = 3 } },
 	{ key = "Time5", id = 0, robux = 49, label = "5 Time Boosts", grant = { Time = 5 } },
 	{ key = "Double1", id = 0, robux = 79, label = "1 Double Points", grant = { DoubleShift = 1 } },
 	{ key = "Double5", id = 0, robux = 299, label = "5 Double Points", grant = { DoubleShift = 5 } },
@@ -163,7 +163,7 @@ Config.Achievements = {
 	{ id = "words_1000", name = "Lexicon", desc = "Play 1000 words.", stat = "wordsPlayed", goal = 1000, reward = { coins = 800, Help = 2 } },
 
 	-- Rare Letters (Q, Z, X, J)
-	{ id = "rare_10", name = "Grandmaster Vocabulary", desc = "Play 10 words with Q, Z, X or J.", stat = "rareWords", goal = 10, reward = { coins = 400, Help = 1 } },
+	{ id = "rare_10", name = "Grandmaster Vocabulary", desc = "Play 10 words with Q, Z, X or J.", stat = "rareWords", goal = 10, reward = { coins = 250 } },
 	{ id = "rare_25", name = "Rare Letter Hunter", desc = "Play 25 words with Q, Z, X or J.", stat = "rareWords", goal = 25, reward = { coins = 800 } },
 	{ id = "rare_50", name = "Scrabble Shark", desc = "Play 50 words with Q, Z, X or J.", stat = "rareWords", goal = 50, reward = { coins = 1500, DoubleShift = 1 } },
 
@@ -202,8 +202,8 @@ Config.Achievements = {
 
 	-- Daily Login Streaks
 	{ id = "daily_3", name = "Routine", desc = "Log in 3 days in a row.", stat = "dailyStreak", goal = 3, reward = { coins = 100 } },
-	{ id = "daily_7", name = "Habit", desc = "Log in 7 days in a row.", stat = "dailyStreak", goal = 7, reward = { coins = 300, Time = 2 } },
-	{ id = "daily_14", name = "Dedicated", desc = "Log in 14 days in a row.", stat = "dailyStreak", goal = 14, reward = { coins = 500, Help = 2 } },
+	{ id = "daily_7", name = "Habit", desc = "Log in 7 days in a row.", stat = "dailyStreak", goal = 7, reward = { coins = 300, Time = 1 } },
+	{ id = "daily_14", name = "Dedicated", desc = "Log in 14 days in a row.", stat = "dailyStreak", goal = 14, reward = { coins = 500, Help = 1 } },
 	{ id = "daily_30", name = "Obsessed", desc = "Log in 30 days in a row.", stat = "dailyStreak", goal = 30, reward = { coins = 1500, DoubleShift = 2 } },
 }
 
@@ -294,6 +294,12 @@ Config.BiblicalWords = {
 
 function Config.IsBiblical(word)
 	return word ~= nil and Config.BiblicalWords[string.lower(word)] == true
+end
+
+function Config.FormatNumber(n)
+	local s = tostring(math.floor(n or 0))
+	local formatted = s:reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
+	return formatted
 end
 
 return Config

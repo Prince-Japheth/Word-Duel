@@ -552,7 +552,7 @@ function Match:applyMove(e, w)
 		local p = PlayerData.Get(e.player)
 		if p then
 			p.wordsPlayed += 1
-			p.coins += Config.Reward.WordCoins + (biblical and 15 or 0)
+			p.coins += Config.Reward.WordCoins + (biblical and 10 or 0)
 			if isFast then
 				p.fastPlays = (p.fastPlays or 0) + 1
 			end
@@ -575,7 +575,7 @@ function Match:applyMove(e, w)
 	if wLen >= Config.LongWordLength and not self.firstBigWordDone then
 		self.firstBigWordDone = true
 		if e.player then
-			PlayerData.Reward(e.player, "award", "FIRST BIG WORD", string.upper(w) .. " (" .. wLen .. " letters • First in match)", { coins = 100 })
+			PlayerData.Reward(e.player, "award", "FIRST BIG WORD", string.upper(w) .. " (" .. wLen .. " letters • First in match)", { coins = 25 })
 		end
 		self:broadcast("FirstBigWord", { by = e.name, word = w, len = wLen })
 	end

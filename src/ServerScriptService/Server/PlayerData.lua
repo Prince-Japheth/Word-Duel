@@ -328,7 +328,7 @@ function PlayerData.AddShards(player, n)
 		p.shards -= Config.ShardsPerHelp
 		p.inventory.Help += 1
 		if PlayerData.OnReward then
-			PlayerData.OnReward(player, { kind = "shards", title = "+1 HINT", sub = "5 shards combined", items = { "+1 Hint" }, grant = { Help = 1 } })
+			PlayerData.OnReward(player, { kind = "shards", title = "+1 HINT", sub = Config.ShardsPerHelp .. " shards combined", items = { "+1 Hint" }, grant = { Help = 1 } })
 		end
 	end
 	PlayerData.Changed(player)
@@ -350,10 +350,10 @@ function PlayerData.Daily(player)
 		p.dailyStreak = 1
 	end
 	p.dailyDay = today
-	local grant = { coins = 50 + 10 * math.min(p.dailyStreak, 10) }
-	if p.dailyStreak % 7 == 0 then
+	local grant = { coins = 40 + 10 * math.min(p.dailyStreak, 10) }
+	if p.dailyStreak % 14 == 0 then
 		grant.DoubleShift = 1
-	elseif p.dailyStreak % 3 == 0 then
+	elseif p.dailyStreak % 7 == 0 then
 		grant.Help = 1
 	end
 	PlayerData.Reward(player, "daily", "DAY " .. p.dailyStreak, "Come back tomorrow for more", grant)

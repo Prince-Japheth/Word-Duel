@@ -17,7 +17,7 @@ Config.ContinueChoiceSeconds = 5 -- after a ranked win: seconds to Leave Table b
 ---------------------------------------------------------------- helps
 Config.HelpMaxPerMatch = 2
 Config.HelpCooldownTurns = 2   -- Help cannot be used on two of your own turns in a row
-Config.ShardsPerHelp = 5       -- Brilliant Move shards that convert into 1 Help
+Config.ShardsPerHelp = 20      -- Brilliant Move shards that convert into 1 Help
 
 ---------------------------------------------------------------- matchmaking
 Config.BaseBracket = 5         -- +/- levels
@@ -63,11 +63,11 @@ Config.LongWordLength = 7
 Config.EloK = 32
 Config.StartElo = 1000
 
--- King-of-the-Table win streak milestones (free lifelines for free players)
+-- King-of-the-Table win streak milestones (rare lifelines for free players)
 Config.StreakMilestones = {
-	[5] = { Help = 1 },
-	[10] = { Help = 1, Time = 1 },
-	[25] = { Help = 2, DoubleShift = 1 },
+	[10] = { Help = 1 },
+	[20] = { Time = 1, Skip = 1 },
+	[35] = { Help = 1, DoubleShift = 1 },
 }
 
 -- Daily Ladder: one shared solo puzzle a day (4-letter start -> target)
@@ -78,10 +78,10 @@ Config.LadderReward = { coins = 40, parBonus = 40, perStreak = 5, xp = 20 } -- f
 -- first-time tutorial: a relaxed match against a coach
 Config.TutorialTurnTime = 45
 Config.TutorialMoves = 4
-Config.TutorialReward = { coins = 100, Help = 1 }
+Config.TutorialReward = { coins = 150, Help = 1 }
 
 Config.ReferralLevel = 3
-Config.ReferralBundle = { Help = 3, Time = 3 }
+Config.ReferralBundle = { Help = 1, Time = 1 }
 
 ---------------------------------------------------------------- items
 Config.ItemOrder = { "Help", "Skip", "Time", "DoubleShift" }
@@ -92,10 +92,10 @@ Config.Items = {
 	Time = { name = "Time Boost", desc = "+5 seconds on your clock." },
 	DoubleShift = { name = "Double Points", desc = "Your next word scores double." },
 }
--- Natural (non-Robux) way to get items: coins earned from playing.
-Config.CoinPrices = { Help = 250, Skip = 350, Time = 200, DoubleShift = 600 }
-Config.SlotCoinPrices = { [2] = 1500, [3] = 5000, [4] = 15000 }
-Config.StartingInventory = { Help = 3, Skip = 1, Time = 2, DoubleShift = 0 }
+-- Natural (non-Robux) way to get items: coins earned from playing a lot.
+Config.CoinPrices = { Help = 3000, Skip = 4000, Time = 2500, DoubleShift = 6000 }
+Config.SlotCoinPrices = { [2] = 15000, [3] = 45000, [4] = 120000 }
+Config.StartingInventory = { Help = 1, Skip = 1, Time = 1, DoubleShift = 0 }
 
 -- Loadout belt: how many boost uses you can bring into ONE match.
 Config.MaxSlots = 4
@@ -112,15 +112,15 @@ Config.SlotLevels = { [2] = 20, [3] = 50, [4] = 100 } -- free unlock by level
 -- id = 0 means "not created yet". In Studio, id 0 grants for free so you can test.
 Config.Products = {
 	-- Coin packs (top up currency)
-	{ key = "Coins1000", id = 0, robux = 49, label = "1,000 Coins", grant = { coins = 1000 }, isCoins = true },
-	{ key = "Coins5000", id = 0, robux = 199, label = "5,000 Coins", grant = { coins = 5000 }, isCoins = true },
-	{ key = "Coins15000", id = 0, robux = 499, label = "15,000 Coins", grant = { coins = 15000 }, isCoins = true },
-	{ key = "Coins50000", id = 0, robux = 1299, label = "50,000 Coins", grant = { coins = 50000 }, isCoins = true },
+	{ key = "Coins2500", id = 0, robux = 49, label = "2,500 Coins", grant = { coins = 2500 }, isCoins = true },
+	{ key = "Coins10000", id = 0, robux = 179, label = "10,000 Coins", grant = { coins = 10000 }, isCoins = true },
+	{ key = "Coins30000", id = 0, robux = 449, label = "30,000 Coins", grant = { coins = 30000 }, isCoins = true },
+	{ key = "Coins100000", id = 0, robux = 1199, label = "100,000 Coins", grant = { coins = 100000 }, isCoins = true },
 
 	-- Boost packs
 	{ key = "Help3", id = 0, robux = 49, label = "3 Hints", grant = { Help = 3 } },
 	{ key = "Help10", id = 0, robux = 129, label = "10 Hints", grant = { Help = 10 } },
-	{ key = "Skip3", id = 0, robux = 49, label = "3 Passes", grant = { Skip = 3 } },
+	{ key = "Skip3", id = 0, robux = 59, label = "3 Passes", grant = { Skip = 3 } },
 	{ key = "Time5", id = 0, robux = 49, label = "5 Time Boosts", grant = { Time = 5 } },
 	{ key = "Double1", id = 0, robux = 79, label = "1 Double Points", grant = { DoubleShift = 1 } },
 	{ key = "Double5", id = 0, robux = 299, label = "5 Double Points", grant = { DoubleShift = 5 } },
@@ -163,7 +163,7 @@ Config.Achievements = {
 	{ id = "words_1000", name = "Lexicon", desc = "Play 1000 words.", stat = "wordsPlayed", goal = 1000, reward = { coins = 800, Help = 2 } },
 
 	-- Rare Letters (Q, Z, X, J)
-	{ id = "rare_10", name = "Grandmaster Vocabulary", desc = "Play 10 words with Q, Z, X or J.", stat = "rareWords", goal = 10, reward = { coins = 400, Help = 1 } },
+	{ id = "rare_10", name = "Grandmaster Vocabulary", desc = "Play 10 words with Q, Z, X or J.", stat = "rareWords", goal = 10, reward = { coins = 250 } },
 	{ id = "rare_25", name = "Rare Letter Hunter", desc = "Play 25 words with Q, Z, X or J.", stat = "rareWords", goal = 25, reward = { coins = 800 } },
 	{ id = "rare_50", name = "Scrabble Shark", desc = "Play 50 words with Q, Z, X or J.", stat = "rareWords", goal = 50, reward = { coins = 1500, DoubleShift = 1 } },
 
@@ -202,8 +202,8 @@ Config.Achievements = {
 
 	-- Daily Login Streaks
 	{ id = "daily_3", name = "Routine", desc = "Log in 3 days in a row.", stat = "dailyStreak", goal = 3, reward = { coins = 100 } },
-	{ id = "daily_7", name = "Habit", desc = "Log in 7 days in a row.", stat = "dailyStreak", goal = 7, reward = { coins = 300, Time = 2 } },
-	{ id = "daily_14", name = "Dedicated", desc = "Log in 14 days in a row.", stat = "dailyStreak", goal = 14, reward = { coins = 500, Help = 2 } },
+	{ id = "daily_7", name = "Habit", desc = "Log in 7 days in a row.", stat = "dailyStreak", goal = 7, reward = { coins = 300, Time = 1 } },
+	{ id = "daily_14", name = "Dedicated", desc = "Log in 14 days in a row.", stat = "dailyStreak", goal = 14, reward = { coins = 500, Help = 1 } },
 	{ id = "daily_30", name = "Obsessed", desc = "Log in 30 days in a row.", stat = "dailyStreak", goal = 30, reward = { coins = 1500, DoubleShift = 2 } },
 }
 
@@ -294,6 +294,12 @@ Config.BiblicalWords = {
 
 function Config.IsBiblical(word)
 	return word ~= nil and Config.BiblicalWords[string.lower(word)] == true
+end
+
+function Config.FormatNumber(n)
+	local s = tostring(math.floor(n or 0))
+	local formatted = s:reverse():gsub("(%d%d%d)", "%1,"):reverse():gsub("^,", "")
+	return formatted
 end
 
 return Config
@@ -2124,15 +2130,17 @@ onEnd = function(match, winner, loser, reason)
 			PlayerData.CheckScoreRecord(winner.player, winner.score)
 			Leaderboards.Submit(winner.player, p)
 
-			-- Subway Surfers-style rare item drop on victory!
-			local dropRoll = math.random()
-			local dropChance = (winner.score and winner.score >= 25) and 0.35 or 0.20
-			if dropRoll < dropChance then
-				local dropPool = { "Help", "Time", "Help", "Time", "Skip", "DoubleShift" }
-				local droppedItem = dropPool[math.random(#dropPool)]
-				local itemName = Config.Items[droppedItem].name
-				res.luckyDrop = { item = droppedItem, name = itemName }
-				PlayerData.Reward(winner.player, "bonus", "LUCKY DROP!", "+1 " .. itemName .. " found after the match!", { [droppedItem] = 1 })
+			-- Subway Surfers-style rare item drop on ranked victory!
+			if ranked then
+				local dropRoll = math.random()
+				local dropChance = (winner.score and winner.score >= 30) and 0.07 or 0.04
+				if dropRoll < dropChance then
+					local dropPool = { "Time", "Time", "Time", "Time", "Help", "Help", "Help", "Skip", "Skip", "DoubleShift" }
+					local droppedItem = dropPool[math.random(#dropPool)]
+					local itemName = Config.Items[droppedItem].name
+					res.luckyDrop = { item = droppedItem, name = itemName }
+					PlayerData.Reward(winner.player, "bonus", "LUCKY DROP!", "+1 " .. itemName .. " found after the match!", { [droppedItem] = 1 })
+				end
 			end
 		end
 		res.canKing = ranked and not match.private and reason ~= "left_server"
@@ -2141,7 +2149,7 @@ onEnd = function(match, winner, loser, reason)
 
 	-- Award for biggest word in that entire match
 	if match.biggestWord and match.biggestWordLen >= 6 and match.biggestWordPlayer then
-		PlayerData.Reward(match.biggestWordPlayer, "award", "BIGGEST WORD", string.upper(match.biggestWord) .. " (" .. match.biggestWordLen .. " letters • Match Best)", { coins = 150 })
+		PlayerData.Reward(match.biggestWordPlayer, "award", "BIGGEST WORD", string.upper(match.biggestWord) .. " (" .. match.biggestWordLen .. " letters • Match Best)", { coins = 40 })
 	end
 
 	for plr, res in pairs(results) do
@@ -3426,7 +3434,7 @@ function Match:applyMove(e, w)
 		local p = PlayerData.Get(e.player)
 		if p then
 			p.wordsPlayed += 1
-			p.coins += Config.Reward.WordCoins + (biblical and 15 or 0)
+			p.coins += Config.Reward.WordCoins + (biblical and 10 or 0)
 			if isFast then
 				p.fastPlays = (p.fastPlays or 0) + 1
 			end
@@ -3449,7 +3457,7 @@ function Match:applyMove(e, w)
 	if wLen >= Config.LongWordLength and not self.firstBigWordDone then
 		self.firstBigWordDone = true
 		if e.player then
-			PlayerData.Reward(e.player, "award", "FIRST BIG WORD", string.upper(w) .. " (" .. wLen .. " letters • First in match)", { coins = 100 })
+			PlayerData.Reward(e.player, "award", "FIRST BIG WORD", string.upper(w) .. " (" .. wLen .. " letters • First in match)", { coins = 25 })
 		end
 		self:broadcast("FirstBigWord", { by = e.name, word = w, len = wLen })
 	end
@@ -4181,7 +4189,7 @@ function PlayerData.AddShards(player, n)
 		p.shards -= Config.ShardsPerHelp
 		p.inventory.Help += 1
 		if PlayerData.OnReward then
-			PlayerData.OnReward(player, { kind = "shards", title = "+1 HINT", sub = "5 shards combined", items = { "+1 Hint" }, grant = { Help = 1 } })
+			PlayerData.OnReward(player, { kind = "shards", title = "+1 HINT", sub = Config.ShardsPerHelp .. " shards combined", items = { "+1 Hint" }, grant = { Help = 1 } })
 		end
 	end
 	PlayerData.Changed(player)
@@ -4203,10 +4211,10 @@ function PlayerData.Daily(player)
 		p.dailyStreak = 1
 	end
 	p.dailyDay = today
-	local grant = { coins = 50 + 10 * math.min(p.dailyStreak, 10) }
-	if p.dailyStreak % 7 == 0 then
+	local grant = { coins = 40 + 10 * math.min(p.dailyStreak, 10) }
+	if p.dailyStreak % 14 == 0 then
 		grant.DoubleShift = 1
-	elseif p.dailyStreak % 3 == 0 then
+	elseif p.dailyStreak % 7 == 0 then
 		grant.Help = 1
 	end
 	PlayerData.Reward(player, "daily", "DAY " .. p.dailyStreak, "Come back tomorrow for more", grant)
@@ -4301,7 +4309,7 @@ function Shop.BuyWithCoins(player, kind)
 		return
 	end
 	if p.coins < price then
-		return PlayerData.Toast(player, "Not enough coins! You have " .. p.coins .. " / " .. price .. " needed. Play duels or top up!")
+		return PlayerData.Toast(player, "Not enough coins! You have " .. Config.FormatNumber(p.coins) .. " / " .. Config.FormatNumber(price) .. " needed. Play duels or top up!")
 	end
 	p.coins -= price
 	PlayerData.Grant(player, { [kind] = 1 })
@@ -4327,7 +4335,7 @@ function Shop.BuySlotWithCoins(player, slot)
 		return PlayerData.Toast(player, "Unlock Slot " .. (slot - 1) .. " first.")
 	end
 	if p.coins < price then
-		return PlayerData.Toast(player, "Need " .. price .. " coins (you have " .. p.coins .. "). Play duels or top up!")
+		return PlayerData.Toast(player, "Need " .. Config.FormatNumber(price) .. " coins (you have " .. Config.FormatNumber(p.coins) .. "). Play duels or top up!")
 	end
 	p.coins -= price
 	p.slotsBought = math.max(p.slotsBought, slot - 1)
@@ -6360,8 +6368,8 @@ renderers.shop = function()
 			local c = make("Frame", { BackgroundColor3 = C.s2, LayoutOrder = coinOrder, Parent = cg }, { corner(16), stroke(C.amber, 0.5, 1.5) })
 			local ic = make("Frame", { BackgroundTransparency = 1, Position = UDim2.fromOffset(16, 20), Size = UDim2.fromOffset(46, 46), Parent = c })
 			coinIcon(ic, 46)
-			text({ Text = p.label, FontFace = F.display, TextSize = 20, Position = UDim2.fromOffset(74, 20), Size = UDim2.fromOffset(120, 24), Parent = c })
-			text({ Text = "Instant coin top-up", FontFace = F.bold, TextSize = 12, TextColor3 = C.dim, Position = UDim2.fromOffset(74, 46), Size = UDim2.fromOffset(120, 16), Parent = c })
+			text({ Text = p.label, FontFace = F.display, TextSize = 18, Position = UDim2.fromOffset(74, 20), Size = UDim2.fromOffset(148, 24), Parent = c })
+			text({ Text = "Instant coin top-up", FontFace = F.bold, TextSize = 12, TextColor3 = C.dim, Position = UDim2.fromOffset(74, 46), Size = UDim2.fromOffset(148, 16), Parent = c })
 			local ready = p.id ~= 0 or IS_STUDIO
 			local key = newKey({
 				text = ready and ("R$ " .. p.robux) or "SOON",
@@ -6393,10 +6401,10 @@ renderers.shop = function()
 		local price = Config.CoinPrices[k]
 		local affordable = profile and profile.coins >= price
 		local key = newKey({
-			text = tostring(price),
+			text = Config.FormatNumber(price),
 			style = affordable and "primary" or "secondary",
-			textSize = 16,
-			size = UDim2.fromOffset(104, 46),
+			textSize = 15,
+			size = UDim2.fromOffset(116, 46),
 			anchor = Vector2.new(1, 0),
 			position = UDim2.new(1, -14, 0, 14),
 			parent = c,
@@ -6405,12 +6413,12 @@ renderers.shop = function()
 					fire("BuyCoins", k)
 				else
 					sfx("bad")
-					toast("Need " .. price .. " coins! Play duels or top up above.")
+					toast("Need " .. Config.FormatNumber(price) .. " coins! Play duels or top up above.")
 				end
 			end,
 		})
-		key.title.Position = UDim2.fromOffset(14, 0)
-		coinIcon(key.face, 18, UDim2.new(0, 14, 0.5, -9))
+		key.title.Position = UDim2.fromOffset(12, 0)
+		coinIcon(key.face, 18, UDim2.new(0, 10, 0.5, -9))
 	end
 
 	-- BELT UPGRADES (COINS OR ROBUX)
@@ -6432,26 +6440,26 @@ renderers.shop = function()
 		text({ Text = "Unlock Boost Slot " .. nextSlot, FontFace = F.heavy, TextSize = 18, Position = UDim2.fromOffset(80, 16), Size = UDim2.new(0.4, 0, 0, 24), Parent = slotCard })
 		text({ Text = "Free at LV " .. (levelReq or 20) .. "  •  Or unlock now:", FontFace = F.bold, TextSize = 13, TextColor3 = C.dim, Position = UDim2.fromOffset(80, 42), Size = UDim2.new(0.4, 0, 0, 20), Parent = slotCard })
 
-		local btnRow = make("Frame", { BackgroundTransparency = 1, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -16, 0.5, 0), Size = UDim2.fromOffset(250, 48), Parent = slotCard }, { list(H, 10, Enum.HorizontalAlignment.Right, Enum.VerticalAlignment.Center) })
+		local btnRow = make("Frame", { BackgroundTransparency = 1, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -16, 0.5, 0), Size = UDim2.fromOffset(264, 48), Parent = slotCard }, { list(H, 10, Enum.HorizontalAlignment.Right, Enum.VerticalAlignment.Center) })
 		if coinPrice then
 			local affordable = profile.coins >= coinPrice
 			local coinBtn = newKey({
-				text = tostring(coinPrice),
+				text = Config.FormatNumber(coinPrice),
 				style = affordable and "primary" or "secondary",
-				textSize = 15,
-				size = UDim2.fromOffset(116, 48),
+				textSize = 14,
+				size = UDim2.fromOffset(128, 48),
 				parent = btnRow,
 				onClick = function()
 					if affordable then
 						fire("BuySlotCoins", nextSlot)
 					else
 						sfx("bad")
-						toast("Need " .. coinPrice .. " coins! Play duels or top up above.")
+						toast("Need " .. Config.FormatNumber(coinPrice) .. " coins! Play duels or top up above.")
 					end
 				end,
 			})
-			coinBtn.title.Position = UDim2.fromOffset(14, 0)
-			coinIcon(coinBtn.face, 18, UDim2.new(0, 10, 0.5, -9))
+			coinBtn.title.Position = UDim2.fromOffset(12, 0)
+			coinIcon(coinBtn.face, 18, UDim2.new(0, 8, 0.5, -9))
 		end
 		if robuxProduct then
 			local ready = robuxProduct.id ~= 0 or IS_STUDIO
@@ -6672,7 +6680,7 @@ renderers.belt = function()
 			lockT.label.TextSize = 18
 			text({ Text = "Locked Slot", FontFace = F.heavy, TextSize = 14, TextColor3 = C.dim, TextXAlignment = CENTER, Position = UDim2.fromOffset(0, 98), Size = UDim2.new(1, 0, 0, 18), Parent = c })
 			local coinP = Config.SlotCoinPrices[slot]
-			local subP = coinP and (coinP .. "c or LV " .. (Config.SlotLevels[slot] or 20)) or ("LV " .. (Config.SlotLevels[slot] or 20))
+			local subP = coinP and (Config.FormatNumber(coinP) .. "c or LV " .. (Config.SlotLevels[slot] or 20)) or ("LV " .. (Config.SlotLevels[slot] or 20))
 			text({ Text = subP, FontFace = F.bold, TextSize = 11, TextColor3 = C.faint, TextXAlignment = CENTER, Position = UDim2.fromOffset(0, 118), Size = UDim2.new(1, 0, 0, 16), Parent = c })
 			if slot == profile.slots + 1 then
 				newKey({
@@ -6868,7 +6876,7 @@ renderers.howto = function()
 		{ "No cheap moves", "No lazy suffix tricks: plurals, past tense, -ing, -er, -ly, -ness and similar. DANCE→DANCER, HAND→HANDY, CATS→CAT - all blocked. Words can only be played once per match." },
 		{ "Faster and faster", "Your clock starts at 12s (faster at higher levels) and shrinks every move - quickly at first, then more gently - but never below 3.5s. Run out and you lose." },
 		{ "Letter locks", "At level " .. Config.LetterLockLevel .. "+, once a rally is fast, 1-2 letters are sometimes locked for a few turns - different ones each turn. You can't play a word that uses them." },
-		{ "Brilliant moves", "Words with Q, Z, X or J earn bonus XP and shards. 5 shards make 1 Hint." },
+		{ "Brilliant moves", "Words with Q, Z, X or J earn bonus XP and shards. " .. Config.ShardsPerHelp .. " shards make 1 Hint." },
 		{ "Elo & Ranked Duels", "Ranked matches put your Elo rating on the line. Beat rivals to gain Elo and climb from Bronze (1000) to Silver, Gold, Platinum, Diamond, and Master. Casual Practice against bots never affects your Elo." },
 		{ "King of the Table", "Win a ranked duel and you keep the table: a new challenger sits down automatically and starts from your last word. Every defense grows your streak and bonuses. Tap LEAVE TABLE any time - you keep everything." },
 		{ "Boosts", "Hint shows a word that scores (max 2 per match, not twice in a row). Pass hands the word back. Time Boost adds 5 seconds. Double Points doubles your next word. Your belt decides how many you bring; faster games open 2 extra slots, and used slots refill after a few turns." },
@@ -6895,7 +6903,7 @@ renderers.guide = function()
 		{ function(p) Icon.item(p, 46, nil, "Time") end, "Time Boost", "Boost: +5 seconds on your clock." },
 		{ function(p) Icon.item(p, 46, nil, "DoubleShift") end, "Double Points", "Boost: your next word scores double." },
 		{ function(p) newTile(p, "+", 46, { face = C.amber, lip = C.amberLip }) end, "Boost Belt", "You bring as many boosts as your belt has slots. Under 7s and 5s on the clock, 2 extra slots open. Used ones refill after 3 of your turns, from what you own." },
-		{ function(p) gemIcon(p, 46) end, "Shards", "From Q, Z, X or J words. 5 shards make a Hint." },
+		{ function(p) gemIcon(p, 46) end, "Shards", "From Q, Z, X or J words. " .. Config.ShardsPerHelp .. " shards make a Hint." },
 		{ function(p) Icon.chest(p, 46) end, "Daily chest", "Play every day - the chest grows with your streak." },
 		{ function(p) Icon.medal(p, 46, nil, true) end, "Medal", "A permanent award. Each one pays out once." },
 		{ function(p) Icon.trophy(p, 46) end, "Record", "You beat your own personal best." },
@@ -8381,7 +8389,7 @@ scrim(welcomeLayer, 0.25)
 local welcomeCard = panel({ AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.fromOffset(560, 380), radius = 24, ZIndex = 2, Parent = welcomeLayer })
 tileWord(welcomeCard, "HELLO", 56, 8, { anchor = Vector2.new(0.5, 0), position = UDim2.new(0.5, 0, 0, 34), face = C.amber, lip = C.amberLip, rotations = { -3, 2, -2, 3, -1 } })
 text({ Text = "New to Word Duel?", FontFace = F.display, TextSize = 28, TextXAlignment = CENTER, Position = UDim2.fromOffset(0, 122), Size = UDim2.new(1, 0, 0, 34), Parent = welcomeCard })
-text({ Text = "Learn it in under a minute with Coach Tilly.\nFinish the tutorial for 100 coins and a free Hint.", FontFace = F.medium, TextSize = 17, TextColor3 = C.dim, TextXAlignment = CENTER, TextWrapped = true, Position = UDim2.fromOffset(30, 164), Size = UDim2.new(1, -60, 0, 50), Parent = welcomeCard })
+text({ Text = "Learn it in under a minute with Coach Tilly.\nFinish the tutorial for " .. (Config.TutorialReward.coins or 150) .. " coins and a free Hint.", FontFace = F.medium, TextSize = 17, TextColor3 = C.dim, TextXAlignment = CENTER, TextWrapped = true, Position = UDim2.fromOffset(30, 164), Size = UDim2.new(1, -60, 0, 50), Parent = welcomeCard })
 newKey({ text = "START TUTORIAL", style = "primary", textSize = 20, size = UDim2.new(1, -60, 0, 66), position = UDim2.fromOffset(30, 232), parent = welcomeCard, onClick = function()
 	welcomeLayer.Visible = false
 	welcomeShown = true
@@ -8710,7 +8718,7 @@ local function renderProfile()
 	rankChip:FindFirstChildOfClass("UIStroke").Color = rc
 	rankChip.BackgroundColor3 = rc
 	wlText.Text = string.format("%dW  %dL  -  %d-LETTER", profile.wins, profile.losses, profile.wordLength)
-	coinText.Text = tostring(profile.coins)
+	coinText.Text = Config.FormatNumber(profile.coins)
 	shardText.Text = profile.shards .. "/" .. Config.ShardsPerHelp
 	lastLevel = profile.level
 	refreshModal()

@@ -1102,8 +1102,8 @@ renderers.shop = function()
 			local c = make("Frame", { BackgroundColor3 = C.s2, LayoutOrder = coinOrder, Parent = cg }, { corner(16), stroke(C.amber, 0.5, 1.5) })
 			local ic = make("Frame", { BackgroundTransparency = 1, Position = UDim2.fromOffset(16, 20), Size = UDim2.fromOffset(46, 46), Parent = c })
 			coinIcon(ic, 46)
-			text({ Text = p.label, FontFace = F.display, TextSize = 20, Position = UDim2.fromOffset(74, 20), Size = UDim2.fromOffset(120, 24), Parent = c })
-			text({ Text = "Instant coin top-up", FontFace = F.bold, TextSize = 12, TextColor3 = C.dim, Position = UDim2.fromOffset(74, 46), Size = UDim2.fromOffset(120, 16), Parent = c })
+			text({ Text = p.label, FontFace = F.display, TextSize = 18, Position = UDim2.fromOffset(74, 20), Size = UDim2.fromOffset(148, 24), Parent = c })
+			text({ Text = "Instant coin top-up", FontFace = F.bold, TextSize = 12, TextColor3 = C.dim, Position = UDim2.fromOffset(74, 46), Size = UDim2.fromOffset(148, 16), Parent = c })
 			local ready = p.id ~= 0 or IS_STUDIO
 			local key = newKey({
 				text = ready and ("R$ " .. p.robux) or "SOON",
@@ -1135,10 +1135,10 @@ renderers.shop = function()
 		local price = Config.CoinPrices[k]
 		local affordable = profile and profile.coins >= price
 		local key = newKey({
-			text = tostring(price),
+			text = Config.FormatNumber(price),
 			style = affordable and "primary" or "secondary",
-			textSize = 16,
-			size = UDim2.fromOffset(104, 46),
+			textSize = 15,
+			size = UDim2.fromOffset(116, 46),
 			anchor = Vector2.new(1, 0),
 			position = UDim2.new(1, -14, 0, 14),
 			parent = c,
@@ -1147,12 +1147,12 @@ renderers.shop = function()
 					fire("BuyCoins", k)
 				else
 					sfx("bad")
-					toast("Need " .. price .. " coins! Play duels or top up above.")
+					toast("Need " .. Config.FormatNumber(price) .. " coins! Play duels or top up above.")
 				end
 			end,
 		})
-		key.title.Position = UDim2.fromOffset(14, 0)
-		coinIcon(key.face, 18, UDim2.new(0, 14, 0.5, -9))
+		key.title.Position = UDim2.fromOffset(12, 0)
+		coinIcon(key.face, 18, UDim2.new(0, 10, 0.5, -9))
 	end
 
 	-- BELT UPGRADES (COINS OR ROBUX)
@@ -1174,26 +1174,26 @@ renderers.shop = function()
 		text({ Text = "Unlock Boost Slot " .. nextSlot, FontFace = F.heavy, TextSize = 18, Position = UDim2.fromOffset(80, 16), Size = UDim2.new(0.4, 0, 0, 24), Parent = slotCard })
 		text({ Text = "Free at LV " .. (levelReq or 20) .. "  •  Or unlock now:", FontFace = F.bold, TextSize = 13, TextColor3 = C.dim, Position = UDim2.fromOffset(80, 42), Size = UDim2.new(0.4, 0, 0, 20), Parent = slotCard })
 
-		local btnRow = make("Frame", { BackgroundTransparency = 1, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -16, 0.5, 0), Size = UDim2.fromOffset(250, 48), Parent = slotCard }, { list(H, 10, Enum.HorizontalAlignment.Right, Enum.VerticalAlignment.Center) })
+		local btnRow = make("Frame", { BackgroundTransparency = 1, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, -16, 0.5, 0), Size = UDim2.fromOffset(264, 48), Parent = slotCard }, { list(H, 10, Enum.HorizontalAlignment.Right, Enum.VerticalAlignment.Center) })
 		if coinPrice then
 			local affordable = profile.coins >= coinPrice
 			local coinBtn = newKey({
-				text = tostring(coinPrice),
+				text = Config.FormatNumber(coinPrice),
 				style = affordable and "primary" or "secondary",
-				textSize = 15,
-				size = UDim2.fromOffset(116, 48),
+				textSize = 14,
+				size = UDim2.fromOffset(128, 48),
 				parent = btnRow,
 				onClick = function()
 					if affordable then
 						fire("BuySlotCoins", nextSlot)
 					else
 						sfx("bad")
-						toast("Need " .. coinPrice .. " coins! Play duels or top up above.")
+						toast("Need " .. Config.FormatNumber(coinPrice) .. " coins! Play duels or top up above.")
 					end
 				end,
 			})
-			coinBtn.title.Position = UDim2.fromOffset(14, 0)
-			coinIcon(coinBtn.face, 18, UDim2.new(0, 10, 0.5, -9))
+			coinBtn.title.Position = UDim2.fromOffset(12, 0)
+			coinIcon(coinBtn.face, 18, UDim2.new(0, 8, 0.5, -9))
 		end
 		if robuxProduct then
 			local ready = robuxProduct.id ~= 0 or IS_STUDIO
@@ -1414,7 +1414,7 @@ renderers.belt = function()
 			lockT.label.TextSize = 18
 			text({ Text = "Locked Slot", FontFace = F.heavy, TextSize = 14, TextColor3 = C.dim, TextXAlignment = CENTER, Position = UDim2.fromOffset(0, 98), Size = UDim2.new(1, 0, 0, 18), Parent = c })
 			local coinP = Config.SlotCoinPrices[slot]
-			local subP = coinP and (coinP .. "c or LV " .. (Config.SlotLevels[slot] or 20)) or ("LV " .. (Config.SlotLevels[slot] or 20))
+			local subP = coinP and (Config.FormatNumber(coinP) .. "c or LV " .. (Config.SlotLevels[slot] or 20)) or ("LV " .. (Config.SlotLevels[slot] or 20))
 			text({ Text = subP, FontFace = F.bold, TextSize = 11, TextColor3 = C.faint, TextXAlignment = CENTER, Position = UDim2.fromOffset(0, 118), Size = UDim2.new(1, 0, 0, 16), Parent = c })
 			if slot == profile.slots + 1 then
 				newKey({
@@ -1610,7 +1610,7 @@ renderers.howto = function()
 		{ "No cheap moves", "No lazy suffix tricks: plurals, past tense, -ing, -er, -ly, -ness and similar. DANCE→DANCER, HAND→HANDY, CATS→CAT - all blocked. Words can only be played once per match." },
 		{ "Faster and faster", "Your clock starts at 12s (faster at higher levels) and shrinks every move - quickly at first, then more gently - but never below 3.5s. Run out and you lose." },
 		{ "Letter locks", "At level " .. Config.LetterLockLevel .. "+, once a rally is fast, 1-2 letters are sometimes locked for a few turns - different ones each turn. You can't play a word that uses them." },
-		{ "Brilliant moves", "Words with Q, Z, X or J earn bonus XP and shards. 5 shards make 1 Hint." },
+		{ "Brilliant moves", "Words with Q, Z, X or J earn bonus XP and shards. " .. Config.ShardsPerHelp .. " shards make 1 Hint." },
 		{ "Elo & Ranked Duels", "Ranked matches put your Elo rating on the line. Beat rivals to gain Elo and climb from Bronze (1000) to Silver, Gold, Platinum, Diamond, and Master. Casual Practice against bots never affects your Elo." },
 		{ "King of the Table", "Win a ranked duel and you keep the table: a new challenger sits down automatically and starts from your last word. Every defense grows your streak and bonuses. Tap LEAVE TABLE any time - you keep everything." },
 		{ "Boosts", "Hint shows a word that scores (max 2 per match, not twice in a row). Pass hands the word back. Time Boost adds 5 seconds. Double Points doubles your next word. Your belt decides how many you bring; faster games open 2 extra slots, and used slots refill after a few turns." },
@@ -1637,7 +1637,7 @@ renderers.guide = function()
 		{ function(p) Icon.item(p, 46, nil, "Time") end, "Time Boost", "Boost: +5 seconds on your clock." },
 		{ function(p) Icon.item(p, 46, nil, "DoubleShift") end, "Double Points", "Boost: your next word scores double." },
 		{ function(p) newTile(p, "+", 46, { face = C.amber, lip = C.amberLip }) end, "Boost Belt", "You bring as many boosts as your belt has slots. Under 7s and 5s on the clock, 2 extra slots open. Used ones refill after 3 of your turns, from what you own." },
-		{ function(p) gemIcon(p, 46) end, "Shards", "From Q, Z, X or J words. 5 shards make a Hint." },
+		{ function(p) gemIcon(p, 46) end, "Shards", "From Q, Z, X or J words. " .. Config.ShardsPerHelp .. " shards make a Hint." },
 		{ function(p) Icon.chest(p, 46) end, "Daily chest", "Play every day - the chest grows with your streak." },
 		{ function(p) Icon.medal(p, 46, nil, true) end, "Medal", "A permanent award. Each one pays out once." },
 		{ function(p) Icon.trophy(p, 46) end, "Record", "You beat your own personal best." },
@@ -3123,7 +3123,7 @@ scrim(welcomeLayer, 0.25)
 local welcomeCard = panel({ AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.fromScale(0.5, 0.5), Size = UDim2.fromOffset(560, 380), radius = 24, ZIndex = 2, Parent = welcomeLayer })
 tileWord(welcomeCard, "HELLO", 56, 8, { anchor = Vector2.new(0.5, 0), position = UDim2.new(0.5, 0, 0, 34), face = C.amber, lip = C.amberLip, rotations = { -3, 2, -2, 3, -1 } })
 text({ Text = "New to Word Duel?", FontFace = F.display, TextSize = 28, TextXAlignment = CENTER, Position = UDim2.fromOffset(0, 122), Size = UDim2.new(1, 0, 0, 34), Parent = welcomeCard })
-text({ Text = "Learn it in under a minute with Coach Tilly.\nFinish the tutorial for 100 coins and a free Hint.", FontFace = F.medium, TextSize = 17, TextColor3 = C.dim, TextXAlignment = CENTER, TextWrapped = true, Position = UDim2.fromOffset(30, 164), Size = UDim2.new(1, -60, 0, 50), Parent = welcomeCard })
+text({ Text = "Learn it in under a minute with Coach Tilly.\nFinish the tutorial for " .. (Config.TutorialReward.coins or 150) .. " coins and a free Hint.", FontFace = F.medium, TextSize = 17, TextColor3 = C.dim, TextXAlignment = CENTER, TextWrapped = true, Position = UDim2.fromOffset(30, 164), Size = UDim2.new(1, -60, 0, 50), Parent = welcomeCard })
 newKey({ text = "START TUTORIAL", style = "primary", textSize = 20, size = UDim2.new(1, -60, 0, 66), position = UDim2.fromOffset(30, 232), parent = welcomeCard, onClick = function()
 	welcomeLayer.Visible = false
 	welcomeShown = true
@@ -3452,7 +3452,7 @@ local function renderProfile()
 	rankChip:FindFirstChildOfClass("UIStroke").Color = rc
 	rankChip.BackgroundColor3 = rc
 	wlText.Text = string.format("%dW  %dL  -  %d-LETTER", profile.wins, profile.losses, profile.wordLength)
-	coinText.Text = tostring(profile.coins)
+	coinText.Text = Config.FormatNumber(profile.coins)
 	shardText.Text = profile.shards .. "/" .. Config.ShardsPerHelp
 	lastLevel = profile.level
 	refreshModal()
