@@ -174,7 +174,7 @@ function Match:candidates()
 	local prev = self.word
 	for len = math.max(MIN_LEN, #prev - 2), math.min(MAX_LEN, #prev + 2) do
 		for _, w in ipairs(Dictionary.AllWords(len)) do
-			if not self.used[w] and kept(prev, w) >= 1 and not WordRules.IsInflection(prev, w) and not WordRules.IsSuffixManipulation(prev, w) and not self:hitsLock(w) then
+			if not self.used[w] and kept(prev, w) >= 1 and not WordRules.IsInflection(prev, w) and not self:hitsLock(w) then
 				table.insert(out, { w = w, pts = points(prev, w) })
 			end
 		end
@@ -638,10 +638,7 @@ function Match:submit(player, raw)
 		return self:reject(e, table.concat(shown, " and ") .. (#shown == 1 and " is" or " are") .. " locked this turn - no words with " .. (#shown == 1 and "it" or "them") .. ".")
 	end
 	if WordRules.IsInflection(self.word, w) then
-		return self:reject(e, "Tense or plural of " .. string.upper(self.word) .. " is not allowed.")
-	end
-	if WordRules.IsSuffixManipulation(self.word, w) then
-		return self:reject(e, "Derivative form of " .. string.upper(self.word) .. " is not allowed.")
+		return self:reject(e, "No plurals or past tense of " .. string.upper(self.word) .. ".")
 	end
 	if not Dictionary.IsWord(w) then
 		return self:reject(e, string.upper(w) .. " is not in the dictionary.")

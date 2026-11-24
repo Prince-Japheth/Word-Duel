@@ -1876,7 +1876,7 @@ feedback:GetPropertyChangedSignal("Text"):Connect(function()
 		end
 		return
 	end
-	local isError = feedback.TextColor3 == C.red or string.find(t, "!") or string.find(t, "No") or string.find(t, "Too") or string.find(t, "Keep") or string.find(t, "locked") or string.find(t, "already") or string.find(t, "different") or string.find(t, "Type") or string.find(t, "BLOCKED") or string.find(t, "ROOT") or string.find(t, "NEED") or string.find(t, "LENGTH") or string.find(t, "SAME ROOT") or string.find(t, "Tense") or string.find(t, "plural") or string.find(t, "Derivative")
+	local isError = feedback.TextColor3 == C.red or string.find(t, "!") or string.find(t, "No") or string.find(t, "Too") or string.find(t, "Keep") or string.find(t, "locked") or string.find(t, "already") or string.find(t, "different") or string.find(t, "Type") or string.find(t, "BLOCKED") or string.find(t, "ROOT") or string.find(t, "PLURALS") or string.find(t, "NEED") or string.find(t, "LENGTH") or string.find(t, "SAME ROOT") or string.find(t, "Tense") or string.find(t, "plural") or string.find(t, "Derivative")
 	local color = isError and C.red or (string.find(t, "+") and C.teal or (string.find(t, "WORTH") and C.teal or (string.find(t, "DIVINE") and rgb(255, 215, 0) or C.amber)))
 	feedback.BackgroundColor3 = isError and rgb(48, 16, 22) or (string.find(t, "+") and rgb(16, 38, 28) or C.s1)
 	feedback.BackgroundTransparency = 0.15
@@ -2022,14 +2022,7 @@ local function submit()
 	end
 	if WordRules.IsInflection(word, guess) then
 		feedback.TextColor3 = C.red
-		feedback.Text = "SAME ROOT  •  Cannot use tense/plural of " .. string.upper(word)
-		sfx("bad")
-		shake(deskInput)
-		return
-	end
-	if WordRules.IsSuffixManipulation(word, guess) then
-		feedback.TextColor3 = C.red
-		feedback.Text = "SAME ROOT  •  Derivative of " .. string.upper(word) .. " not allowed"
+		feedback.Text = "NO PLURALS / PAST TENSE  •  Not a form of " .. string.upper(word)
 		sfx("bad")
 		shake(deskInput)
 		return
@@ -2433,10 +2426,7 @@ updatePreview = function()
 		feedback.Text = "KEEP 1+ LETTER  •  Must keep a letter from " .. string.upper(word)
 		submitKey:setEnabled(false)
 	elseif WordRules.IsInflection(word, guess) then
-		feedback.Text = "SAME ROOT  •  Cannot use tense/plural of " .. string.upper(word)
-		submitKey:setEnabled(false)
-	elseif WordRules.IsSuffixManipulation(word, guess) then
-		feedback.Text = "SAME ROOT  •  Derivative of " .. string.upper(word) .. " not allowed"
+		feedback.Text = "NO PLURALS / PAST TENSE  •  Not a form of " .. string.upper(word)
 		submitKey:setEnabled(false)
 	else
 		local pts = pts0 * (s.doublePoints and 2 or 1)
@@ -3218,6 +3208,25 @@ alignMatchCamera = function()
 			end
 		end
 	end
+	-- Still searching (not seated): frame the nearest free table from a seat, same angle as a match
+	if not seat and searching then
+		local arena = workspace:FindFirstChild("WordDuelArena")
+		local best, bestD = nil, math.huge
+		if arena then
+			for _, d in ipairs(arena:GetDescendants()) do
+				if d:IsA("Seat") and d.Name == "SeatA" and not d.Occupant then
+					local other = d.Parent and d.Parent:FindFirstChild("SeatB")
+					if not (other and other:IsA("Seat") and other.Occupant) then
+						local dist = (d.Position - root.Position).Magnitude
+						if dist < bestD then
+							best, bestD = d, dist
+						end
+					end
+				end
+			end
+		end
+		seat = best
+	end
 	-- If not seated yet and still at the lobby spawn area (Z <= -45), wait until character reaches table
 	if not seat and root.Position.Z <= -45 then
 		return false
@@ -3312,7 +3321,7 @@ setSearching = function(on, q)
 
 		-- My plate: populated with current player
 		myPlate.setAvatar(player.UserId, player.Name)
-		myPlate.name.Text = player.Name
+		myPlate.name.Text = player.DisplayName
 		local lvl = profile and profile.level or 1
 		local rk = profile and profile.rank or "BRONZE"
 		myPlate.info.Text = string.format("LV %d  -  %s", lvl, string.upper(rk))
@@ -3336,13 +3345,13 @@ setSearching = function(on, q)
 
 		-- Headers
 		modeTag.Text = "RANKED MATCHMAKING"
-		statusLabel.Text = "YOUR MOVE"
+		statusLabel.Text = "GET READY"
 		statusLabel.TextColor3 = C.amber
 
 		-- Clean matchmaking chips with full game rules readable
 		clearChildren(chipsRow, "UIListLayout")
 		chip(chipsRow, "ANY WORD - KEEP 1+ LETTER IN ITS SPOT", C.amber, 1)
-		chip(chipsRow, "NO LAZY SUFFIXES", C.dim, 2)
+		chip(chipsRow, "NO PLURALS / PAST TENSE", C.dim, 2)
 		chip(chipsRow, "MOVE 1", C.dim, 3)
 
 		-- Real 3D letter tile placeholders (cream tiles with ? and 3D lips)

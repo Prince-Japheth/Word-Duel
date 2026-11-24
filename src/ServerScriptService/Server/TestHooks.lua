@@ -259,7 +259,12 @@ function TestHooks.Start(deps)
 		local roundTrip = loaded and loaded.coins == 4321 and loaded.inventory.Help == 17 and loaded.achievements.first_win == 123
 		PlayerData.Release(twin)
 		-- receipts: product grant only confirmed when the save works
-		local product = Config.Products[1]
+		local product
+		for _, pr in ipairs(Config.Products) do
+			if pr.key == "Help3" then
+				product = pr
+			end
+		end
 		local oldId = product.id
 		product.id = 987654
 		local helpBefore = prof.inventory.Help
@@ -385,6 +390,7 @@ function TestHooks.Start(deps)
 			ended = { winner = w, loser = l, reason = why }
 		end
 		local m = Match.new(tbl, Match.PlayerEntity(fa), Match.PlayerEntity(fb), { ranked = true, word = "tread", onEnd = onEnd })
+		m.turn = 1 -- test script: TesterA opens (real games: lower level first)
 		check("ranked people", m.ranked == true)
 		check("early move blocked", submitAs(fa, "steal"):find("Get ready") ~= nil)
 		task.wait(1.6)
@@ -420,6 +426,7 @@ function TestHooks.Start(deps)
 		Ambient.Stop(tblC)
 		ended = nil
 		local mc = Match.new(tblC, Match.PlayerEntity(fa), Match.PlayerEntity(fb), { ranked = false, word = "cat", onEnd = onEnd })
+		mc.turn = 1
 		task.wait(1.6)
 		check("CATS refused", submitAs(fa, "cats"):find("plurals") ~= nil)
 		check("CATER accepted", submitAs(fa, "cater") == "accepted -> cater")
@@ -435,6 +442,7 @@ function TestHooks.Start(deps)
 		local tblL = Arena.FreeTable()
 		Ambient.Stop(tblL)
 		local ml = Match.new(tblL, Match.PlayerEntity(fa), Match.PlayerEntity(fb), { ranked = false, word = "planter", onEnd = function() end })
+		ml.turn = 1
 		task.wait(1.6)
 		ml.volley = 2
 		check("no locks early/low level", not ml:locksAllowed())
@@ -491,6 +499,7 @@ function TestHooks.Start(deps)
 		local tblP = Arena.FreeTable()
 		Ambient.Stop(tblP)
 		local mp = Match.new(tblP, Match.PlayerEntity(fa), Match.PlayerEntity(fb), { ranked = false, word = "stone", onEnd = function() end })
+		mp.turn = 1
 		task.wait(1.6)
 		local pe = mp.ents[1]
 		local prof = PlayerData.Get(fa)
@@ -526,6 +535,7 @@ function TestHooks.Start(deps)
 		Ambient.Stop(tblT)
 		ended = nil
 		local mt = Match.new(tblT, Match.PlayerEntity(fa), Match.PlayerEntity(fb), { ranked = true, word = "pin", onEnd = onEnd })
+		mt.turn = 1
 		task.wait(1.6)
 		mt.deadline = workspace:GetServerTimeNow() + 0.15
 		mt:armTimer(mt.token)
