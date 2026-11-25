@@ -112,21 +112,21 @@ Config.SlotLevels = { [2] = 20, [3] = 50, [4] = 100 } -- free unlock by level
 -- id = 0 means "not created yet". In Studio, id 0 grants for free so you can test.
 Config.Products = {
 	-- Coin packs (top up currency)
-	{ key = "Coins2500", id = 0, robux = 49, label = "2,500 Coins", grant = { coins = 2500 }, isCoins = true },
-	{ key = "Coins10000", id = 0, robux = 179, label = "10,000 Coins", grant = { coins = 10000 }, isCoins = true },
-	{ key = "Coins30000", id = 0, robux = 449, label = "30,000 Coins", grant = { coins = 30000 }, isCoins = true },
-	{ key = "Coins100000", id = 0, robux = 1199, label = "100,000 Coins", grant = { coins = 100000 }, isCoins = true },
+	{ key = "Coins2500", id = 3736118967, robux = 49, label = "2,500 Coins", grant = { coins = 2500 }, isCoins = true },
+	{ key = "Coins10000", id = 3736119109, robux = 179, label = "10,000 Coins", grant = { coins = 10000 }, isCoins = true },
+	{ key = "Coins30000", id = 3736119179, robux = 449, label = "30,000 Coins", grant = { coins = 30000 }, isCoins = true },
+	{ key = "Coins100000", id = 3736119289, robux = 1199, label = "100,000 Coins", grant = { coins = 100000 }, isCoins = true },
 
 	-- Boost packs
-	{ key = "Help3", id = 0, robux = 49, label = "3 Hints", grant = { Help = 3 } },
-	{ key = "Help10", id = 0, robux = 129, label = "10 Hints", grant = { Help = 10 } },
-	{ key = "Skip3", id = 0, robux = 59, label = "3 Passes", grant = { Skip = 3 } },
-	{ key = "Time5", id = 0, robux = 49, label = "5 Time Boosts", grant = { Time = 5 } },
-	{ key = "Double1", id = 0, robux = 79, label = "1 Double Points", grant = { DoubleShift = 1 } },
-	{ key = "Double5", id = 0, robux = 299, label = "5 Double Points", grant = { DoubleShift = 5 } },
-	{ key = "Slot2", id = 0, robux = 399, label = "Boost Slot 2", slot = 2 },
-	{ key = "Slot3", id = 0, robux = 899, label = "Boost Slot 3", slot = 3 },
-	{ key = "Slot4", id = 0, robux = 1499, label = "Boost Slot 4", slot = 4 },
+	{ key = "Help3", id = 3736119374, robux = 49, label = "3 Hints", grant = { Help = 3 } },
+	{ key = "Help10", id = 3736119492, robux = 129, label = "10 Hints", grant = { Help = 10 } },
+	{ key = "Skip3", id = 3736119623, robux = 59, label = "3 Passes", grant = { Skip = 3 } },
+	{ key = "Time5", id = 3736119727, robux = 49, label = "5 Time Boosts", grant = { Time = 5 } },
+	{ key = "Double1", id = 3736119843, robux = 79, label = "1 Double Points", grant = { DoubleShift = 1 } },
+	{ key = "Double5", id = 3736119965, robux = 299, label = "5 Double Points", grant = { DoubleShift = 5 } },
+	{ key = "Slot2", id = 3736120225, robux = 399, label = "Boost Slot 2", slot = 2 },
+	{ key = "Slot3", id = 3736120322, robux = 899, label = "Boost Slot 3", slot = 3 },
+	{ key = "Slot4", id = 3736120406, robux = 1499, label = "Boost Slot 4", slot = 4 },
 }
 
 ---------------------------------------------------------------- ranks (by Elo)

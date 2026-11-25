@@ -10,17 +10,21 @@ These are the steps that need your Roblox account. Everything else is built and 
 ## 2. Create the Robux products
 Creator Dashboard > your experience > Monetization > Developer Products. Create one product per row below, then paste each product's ID into the `id = 0` field of the matching row in `src/ReplicatedStorage/Shared/Config.lua` (`Config.Products`). Then run `python3 build.py` and reopen the place, or ask Claude to push the change into Studio.
 
-| key     | Name            | Price (R$) |
-|---------|-----------------|-----------:|
-| Help3   | 3 Helps         | 49   |
-| Help10  | 10 Helps        | 129  |
-| Skip3   | 3 Skips         | 49   |
-| Time5   | 5 More Time     | 49   |
-| Double1 | 1 Double-Shift  | 79   |
-| Double5 | 5 Double-Shifts | 299  |
-| Slot2   | Belt Slot 2     | 399  |
-| Slot3   | Belt Slot 3     | 899  |
-| Slot4   | Belt Slot 4     | 1499 |
+| key         | Name            | Price (R$) |
+|-------------|-----------------|-----------:|
+| Coins2500   | 2,500 Coins     | 49   |
+| Coins10000  | 10,000 Coins    | 179  |
+| Coins30000  | 30,000 Coins    | 449  |
+| Coins100000 | 100,000 Coins   | 1199 |
+| Help3       | 3 Hints         | 49   |
+| Help10      | 10 Hints        | 129  |
+| Skip3       | 3 Passes        | 59   |
+| Time5       | 5 Time Boosts   | 49   |
+| Double1     | 1 Double Points | 79   |
+| Double5     | 5 Double Points | 299  |
+| Slot2       | Boost Slot 2    | 399  |
+| Slot3       | Boost Slot 3    | 899  |
+| Slot4       | Boost Slot 4    | 1499 |
 
 While a product still has `id = 0`, a live server shows it as **SOON** and blocks it. Studio grants it for free so you can test.
 
@@ -33,7 +37,7 @@ While a product still has `id = 0`, a live server shows it as **SOON** and block
 ## 4. Store page and rating
 - Fill in the **Experience Questionnaire** (Creator Dashboard > Audience). It's required for the age rating.
 - Upload an icon (512x512) and 2 to 3 thumbnails (1920x1080). Screenshots of the lobby and a match work well.
-- Write a description, e.g. *"1v1 word duel on a chess clock. Change one letter, make a real word, beat the clock."*
+- Write a description, e.g. *"1v1 word duel against the clock. Play any real word that keeps a letter in the same spot. Longer words score more. The clock speeds up - run out of time and you lose."*
 
 ## 5. Go public
 Set the experience to Public. Watch the first sessions for crude or archaic words that get through, and add them to `words_block.txt`.
